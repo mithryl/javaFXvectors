@@ -15,6 +15,8 @@ import static java.lang.Math.*;
 
 public class VectorField extends Application {
 
+    
+    //test change for git
     final int WIDTH = 2000, HEIGHT = 2000;  //width and height of javaFX stage
     int offset = WIDTH/2;   //Set origin to center of screen
 
