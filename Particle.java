@@ -1,4 +1,3 @@
-import com.sun.corba.se.impl.orbutil.graph.Graph;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -8,44 +7,37 @@ public class Particle {
     Vector velocity = new Vector(0,0.0);
     Vector acceleration = new Vector(0,0);
 
-    public void drawpath(VectorField field, Color color){
+    public Particle(){} //default
+    public Particle(double X, double Y){
+        velocity = new Vector(X,Y);
+    }
+
+
+    public void drawpath(VectorField field, Color color, int iterations){
         GraphicsContext gc = field.gc;
+
+        gc.setStroke(color);
+        gc.setLineWidth(1);
 
         double lx = position.X;
         double ly = position.Y;
 
-        gc.clearRect(0,0,2000,2000);
-
-        for(int i = 0; i < 1000; i++) {
-
-            update(field);
-            gc.setStroke(color);
-            gc.setLineWidth(4);
-
-            field.strokeLine(gc,lx,ly,position.X,position.Y);
-
-            lx = position.X;
-            ly = position.Y;
+        for(int i = 0; i < iterations; i++) {
+                update(field);
+                field.strokeLine(gc, lx, ly, position.X, position.Y);
+                lx = position.X;
+                ly = position.Y;
         }
     }
 
     public AnimationTimer getanimation(VectorField field, Color color){
         GraphicsContext gc = field.gc;
         gc.clearRect(0,0,field.WIDTH,field.HEIGHT);
+        gc.setStroke(color);
 
         return new AnimationTimer(){
-            double lx = position.X;
-            double ly = position.Y;
-
             public void handle(long t){
-                update(field);
-                gc.setStroke(color);
-                gc.setLineWidth(4);
-
-                field.strokeLine(gc,lx,ly,position.X,position.Y);
-
-                lx = position.X;
-                ly = position.Y;
+                drawpath(field,color,field.animationSpeed);
             }
         };
     }
@@ -60,9 +52,6 @@ public class Particle {
         funcforce.Y = -field.partialy(field::function,position.X,position.Y);
 
         acceleration.add(funcforce);
-        acceleration.normalize();
-        acceleration.mult(0.01);
-
         velocity.add(acceleration);
         position.add(velocity);
     }
