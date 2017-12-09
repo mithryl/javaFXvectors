@@ -7,7 +7,7 @@ public class Particle {
     Vector velocity = new Vector(0,0.0);
     Vector acceleration = new Vector(0,0);
 
-    public Particle(){} //default
+    public Particle(){} //default constructor
     public Particle(double X, double Y){
         velocity = new Vector(X,Y);
     }
@@ -48,6 +48,7 @@ public class Particle {
         acceleration.Y = 0;
 
         Vector funcforce = new Vector();
+
         funcforce.X = -field.partialx(field::function,position.X,position.Y);
         funcforce.Y = -field.partialy(field::function,position.X,position.Y);
 

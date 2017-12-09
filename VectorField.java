@@ -15,33 +15,27 @@ import static java.lang.Math.*;
 
 public class VectorField extends Application {
 
-
-    //test change for git
-    final int WIDTH = 1000, HEIGHT = 1000;  //width and height of javaFX stage
+    final int WIDTH = 2000, HEIGHT = 2000;  //width and height of javaFX stage
     int offset = WIDTH/2;   //Set origin to center of screen
 
-
-    double size = 5;
-
+    double size = 10;
     double startx = -size,endx = size,starty = -size,endy = size;   //x range and y range
     double scale = WIDTH / (endx - startx); //fit width to FX width
 
     //These may need to be changed to adjust for low resolution screens
     double vectorstep = ((endx - startx) / WIDTH) * 50;    //size and distance of vectors
-
     double resolution = ((endx - startx)/WIDTH) * 3;   //resolution of function
-
     double pointres = 3;        //size of each pixel drawn by fx, spaced by resultion
 
-    Color pathColor = Color.BLACK;
+    Color pathColor = Color.BLACK;//color drawn by particle
 
     Group root = new Group();
     Scene scene = new Scene(root,WIDTH,HEIGHT);
 
-    //two canvas objs are used to remove redunant redraw operations
+    //two canvas objs are used to remove redundant redraw operations
     Canvas canvas = new Canvas(WIDTH,HEIGHT);
     Canvas funcanvas = new Canvas(WIDTH,HEIGHT);
-    GraphicsContext gc = canvas.getGraphicsContext2D();     //gc used for drawing descent and stuff - is cleared
+    GraphicsContext gc = canvas.getGraphicsContext2D();     //gc used for drawing particle - is cleared
     GraphicsContext fc = funcanvas.getGraphicsContext2D();  //fc used for drawing function and vector field
 
     AnimationTimer currentAnimtion;
@@ -86,23 +80,12 @@ public class VectorField extends Application {
         stage.setScene(scene);
         stage.show();
 
-        //drawfunction(this::function);
-        //drawvectorfield(this::function);
-
-        new AnimationTimer(){
-            double y = -7.5;
-            public void handle(long t){
-                gc.clearRect(0,0,2000,2000);
-                Particle ball = new Particle(0,0);
-                ball.position = new Vector(0,y);
-                ball.drawpath(VectorField.this,pathColor,10000);
-                y -= 0.0001;
-            }
-        }.start();
+        drawfunction(this::function);
+        drawvectorfield(this::function);
     }
 
     public double function(double x, double y){
-        return (sin(x+y) + x*x + y*y)* 0.001;
+        return (sin(x) + sin(y)) * 0.00001;
     }
 
     public void animateParticle(double x, double y){
